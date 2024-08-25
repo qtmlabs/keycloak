@@ -24,11 +24,9 @@ export async function registerByWebAuthn(input) {
     }
 
     const authenticatorSelection = {};
-    let isAuthenticatorSelectionSpecified = false;
 
     if (input.authenticatorAttachment !== 'not specified') {
         authenticatorSelection.authenticatorAttachment = input.authenticatorAttachment;
-        isAuthenticatorSelectionSpecified = true;
     }
 
     if (input.requireResidentKey !== 'not specified') {
@@ -37,17 +35,15 @@ export async function registerByWebAuthn(input) {
         } else {
             authenticatorSelection.requireResidentKey = false;
         }
-        isAuthenticatorSelectionSpecified = true;
+    } else {
+        authenticatorSelection.residentKey = 'preferred';
     }
 
     if (input.userVerificationRequirement !== 'not specified') {
         authenticatorSelection.userVerification = input.userVerificationRequirement;
-        isAuthenticatorSelectionSpecified = true;
     }
 
-    if (isAuthenticatorSelectionSpecified) {
-        publicKey.authenticatorSelection = authenticatorSelection;
-    }
+    publicKey.authenticatorSelection = authenticatorSelection;
 
     if (input.createTimeout !== 0) {
         publicKey.timeout = input.createTimeout * 1000;
